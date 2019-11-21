@@ -103,6 +103,7 @@ class _PathHistory{
   Paint currentPaint;
   Paint _backgroundPaint;
   bool _inDrag;
+  Image _backgroundImage;
 
   _PathHistory(){
     _paths=new List<MapEntry<Path,Paint>>();
@@ -112,6 +113,10 @@ class _PathHistory{
 
   void setBackgroundColor(Color backgroundColor){
     _backgroundPaint.color=backgroundColor;
+  }
+
+  void setBackgroundImage(Image image) {
+    _backgroundImage = image;
   }
 
   void undo() {
@@ -148,6 +153,11 @@ class _PathHistory{
 
   void draw(Canvas canvas,Size size){
     canvas.drawRect(new Rect.fromLTWH(0.0, 0.0, size.width, size.height), _backgroundPaint);
+
+    if (_backgroundImage != null) {
+      canvas.drawImage(_backgroundImage, Offset.zero, _backgroundPaint);
+    }
+
     for(MapEntry<Path,Paint> path in _paths){
       canvas.drawPath(path.key,path.value);
     }
@@ -176,6 +186,7 @@ class PictureDetails{
 class PainterController extends ChangeNotifier{
   Color _drawColor=new Color.fromARGB(255, 0, 0, 0);
   Color _backgroundColor=new Color.fromARGB(255, 255, 255, 255);
+  Image _backgroundImage;
 
   double _thickness=1.0;
   PictureDetails _cached;
@@ -204,6 +215,12 @@ class PainterController extends ChangeNotifier{
     _updatePaint();
   }
 
+  Image get backgroundImage => _backgroundImage;
+  set backgroundImage(Image value) {
+    _backgroundImage = value;
+    _updatePaint();
+  }
+
   void _updatePaint(){
     Paint paint=new Paint();
     paint.color=drawColor;
@@ -211,6 +228,7 @@ class PainterController extends ChangeNotifier{
     paint.strokeWidth=thickness;
     _pathHistory.currentPaint=paint;
     _pathHistory.setBackgroundColor(backgroundColor);
+    _pathHistory.setBackgroundImage(_backgroundImage);
     notifyListeners();
   }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:painter/painter.dart';
 import 'dart:typed_data';
@@ -37,6 +39,17 @@ class _ExamplePageState extends State<ExamplePage> {
     PainterController controller=new PainterController();
     controller.thickness=5.0;
     controller.backgroundColor=Colors.green;
+
+    Future.delayed(Duration.zero, () async {
+      String path = 'https://i.postimg.cc/ydwkDFGz/unnamed.jpg';
+      NetworkImage img = new NetworkImage(path);
+      img.resolve(ImageConfiguration()).addListener(
+        ImageStreamListener((ImageInfo info, bool _) {
+          controller.backgroundImage = info.image;
+        }),
+      );
+    });
+
     return controller;
   }
 
