@@ -95,10 +95,7 @@ class _ExamplePageState extends State<ExamplePage> {
           )
       ),
       body: new Center(
-          child:new AspectRatio(
-              aspectRatio: 1.0,
-              child: new Painter( _controller)
-          )
+          child: Painter( _controller),
       ),
     );
   }
